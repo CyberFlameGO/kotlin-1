@@ -1097,6 +1097,11 @@ public class CliTestGenerated extends AbstractCliTest {
             runTest("compiler/testData/cli/js/emptySources.args");
         }
 
+        @TestMetadata("fir.args")
+        public void testFir() throws Exception {
+            runTest("compiler/testData/cli/js/fir.args");
+        }
+
         @TestMetadata("inlineCycle.args")
         public void testInlineCycle() throws Exception {
             runTest("compiler/testData/cli/js/inlineCycle.args");
@@ -1346,6 +1351,11 @@ public class CliTestGenerated extends AbstractCliTest {
         @TestMetadata("anonymousObjectType.args")
         public void testAnonymousObjectType() throws Exception {
             runTest("compiler/testData/cli/metadata/anonymousObjectType.args");
+        }
+
+        @TestMetadata("fir.args")
+        public void testFir() throws Exception {
+            runTest("compiler/testData/cli/metadata/fir.args");
         }
 
         @TestMetadata("inheritorOfExpectSealedClass.args")
