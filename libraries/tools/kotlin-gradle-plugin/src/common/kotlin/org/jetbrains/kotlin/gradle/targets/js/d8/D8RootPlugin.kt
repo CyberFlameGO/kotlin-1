@@ -1,0 +1,49 @@
+/*
+ * Copyright 2010-2020 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
+ */
+
+package org.jetbrains.kotlin.gradle.targets.js.d8
+
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.plugins.BasePlugin
+import org.jetbrains.kotlin.gradle.targets.js.MultiplePluginDeclarationDetector
+import org.jetbrains.kotlin.gradle.targets.js.d8.D8RootExtension.Companion.EXTENSION_NAME
+import org.jetbrains.kotlin.gradle.tasks.CleanDataTask
+import org.jetbrains.kotlin.gradle.tasks.registerTask
+
+open class D8RootPlugin : Plugin<Project> {
+    override fun apply(project: Project): Unit = project.run {
+        MultiplePluginDeclarationDetector.detect(project)
+
+        project.plugins.apply(BasePlugin::class.java)
+
+        check(project == project.rootProject) {
+            "D8RootPlugin can be applied only to root project"
+        }
+
+        val settings = this.extensions.create(EXTENSION_NAME, D8RootExtension::class.java, this)
+
+        registerTask<D8SetupTask>(D8SetupTask.NAME) {
+            it.group = TASKS_GROUP_NAME
+            it.description = "Download and install local d8 version"
+        }
+
+        tasks.register("d8" + CleanDataTask.NAME_SUFFIX, CleanDataTask::class.java) {
+            it.cleanableStoreProvider = provider { settings.requireConfigured().cleanableStore }
+            it.group = TASKS_GROUP_NAME
+            it.description = "Clean unused local d8 version"
+        }
+    }
+
+    companion object {
+        const val TASKS_GROUP_NAME: String = "d8"
+
+        fun apply(rootProject: Project): D8RootExtension {
+            check(rootProject == rootProject.rootProject)
+            rootProject.plugins.apply(D8RootPlugin::class.java)
+            return rootProject.extensions.getByName(EXTENSION_NAME) as D8RootExtension
+        }
+    }
+}
