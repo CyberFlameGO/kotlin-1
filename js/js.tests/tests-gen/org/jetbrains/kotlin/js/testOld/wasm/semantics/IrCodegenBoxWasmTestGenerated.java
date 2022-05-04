@@ -6562,6 +6562,11 @@ public class IrCodegenBoxWasmTestGenerated extends AbstractIrCodegenBoxWasmTest 
             public void testLambdaWithMultipleParameters() throws Exception {
                 runTest("compiler/testData/codegen/box/coroutines/bridges/lambdaWithMultipleParameters.kt");
             }
+
+            @TestMetadata("mapSuspendClear.kt")
+            public void testMapSuspendClear() throws Exception {
+                runTest("compiler/testData/codegen/box/coroutines/bridges/mapSuspendClear.kt");
+            }
         }
 
         @TestMetadata("compiler/testData/codegen/box/coroutines/controlFlow")
